@@ -49,7 +49,13 @@ Prompts 位置：
 - `.ai_context/prompts/9_workflow_coordinator.md`
 - `.ai_context/prompts/10_pdf_reader_agent.md`
 
-## 3. 写作注意事项（高优先级规则）
+## 3. Antigravity Workflows / Antigravity 自动化工作流
+
+本仓库内置了专为 Antigravity Agent 设计的自动化执行脚本（位于 `.agents/workflows/` 目录下）：
+- **`/ai_vibe_writing`**: 自动分析 `custom_specs.md`、生成大纲、起草文本并完成 AI 检阅与修订。
+- **`/pdf_ingestion`**: 自动下载或读取本地 PDF，解析文本并提取结构化事实写入 `reference_library.json` 等长期记忆。
+
+## 4. 写作注意事项（高优先级规则）
 
 1. **必须读取风格与错题本**：避免风格漂移与历史错误复现。
 2. **避免“AI 味”高频词**：如过度套路化的词组或机械性转折。

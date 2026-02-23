@@ -210,6 +210,13 @@ If `PDF Engine` is set to mineru, the agent will parse PDFs into structured mark
 若 `PDF Engine` 设为 mineru，智能体将先解析为结构化 markdown/JSON 再抽取证据。
 
 ### IDE Integration / IDE 接入方式
+
+**Antigravity (Recommended for Automation) / Antigravity (自动化首选)**
+- 在对话中直接输入指令触发完整工作流：
+  - 输入 `/ai_vibe_writing` 自动执行大纲生成、内容创作与检阅闭环。
+  - 输入 `/pdf_ingestion` 自动解析本地/网络 PDF 并提取结构化证据入库。
+- 系统会在 `.agents/workflows/` 中读取标准化的执行步骤，无需手动干预。
+
 **Trae**
 - 将本仓库作为工作区打开
 - 调用 pdf-reader-agent 并提供本地路径或在线 PDF URL
