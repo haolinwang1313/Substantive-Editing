@@ -4,20 +4,21 @@
 
 ## 1. 系统级写作流程（必须遵循）
 
-工作流来自系统规则，贯穿所有写作任务：
-1. **分析**：读取 `style_profile.md` 与 `custom_specs.md`，明确语气、主题、受众与约束。
-2. **召回**：读取 `error_log.md` 与长期记忆，避免已知错误并对齐领域术语。
-3. **规划**：对长文或复杂任务先出大纲（参考 `outline_template.md`）。
-4. **写作**：按风格与约束生成内容。
-5. **自检**：排查 AI 味、错题本违例、语法问题。
-6. **迭代**：根据反馈更新错题本与长期记忆。
+本系统采用 **Spec-Driven (规范驱动)** 写作理念，工作流贯穿所有任务：
+1. **规范制定 (Spec Definition)**：系统生成 `document_spec.md`，明确核心论据、证据与负面约束。此为单点客观真相 (Single Source of Truth)。
+2. **规划 (Outline)**：生成带有严格 `definition_of_done` (DoD) 的大纲章节。
+3. **分析与召回**：读取 `style_profile.md` 与长短期记忆，避免已知错误并对齐领域术语。
+4. **写作 (Draft)**：写作 Agent 根据 DoD 与约束生成内容。遇大规模修改须先提交 `<Revision_Plan>`。
+5. **规范审计 (Spec Audit) 与自检**：检阅 Agent 对照 `document_spec.md` 逐条审计。排查 AI 味及词汇违例。
+6. **迭代**：未能通过审计直接打回强制重写。用户反馈更新对应记忆库。
 
 参考配置入口：
 - `.traerules`
+- `.ai_context/document_spec_template.md` (新增)
 - `.ai_context/style_profile.md`
 - `.ai_context/error_log.md`
 - `.ai_context/custom_specs.md`
-- `.ai_context/outline_template.md`
+- `.ai_context/outline_template.md` (含 DoD 更新)
 - `.ai_context/memory/hard_memory.json`
 - `.ai_context/memory/soft_memory.json`
 
@@ -57,12 +58,15 @@ Prompts 位置：
 
 ## 4. 写作注意事项（高优先级规则）
 
-1. **必须读取风格与错题本**：避免风格漂移与历史错误复现。
-2. **避免“AI 味”高频词**：如过度套路化的词组或机械性转折。
-3. **长文先出大纲**：结构优先，再落地内容。
-4. **严格对齐长期记忆**：术语、单位、关键事实以硬记忆为准。
-5. **语法检查只做纠错**：除非用户明确要求重写。
-6. **检阅阶段独立执行**：AI 味检测与查重输出需独立报告。
+1. **必须敲定 Document Spec**：任何大型写作任务首要确认 Spec，不可跳过此步骤。
+2. **严格遵守 DoD**：大纲中的 Definition of Done 是验收红线。
+3. **重写需提案 (Revision Plan)**：遇到大规模用户修改意见，严禁直接生成正文，必须先输出修订方案 `<Revision_Plan>`，用户同意后再执行。
+4. **必须读取风格与错题本**：避免风格漂移与历史错误复现。
+5. **避免“AI 味”高频词**：如过度套路化的词组或机械性转折。
+6. **长文先出大纲**：结构优先，再落地内容。
+7. **严格对齐长期记忆**：术语、单位、关键事实以硬记忆为准。
+8. **语法检查只做纠错**：除非用户明确要求重写。
+9. **规范审计 (Spec Audit) 必须刚性**：检阅 Agent 若发现未满足 Spec，应直接打回 `failed_specs`，不可含糊通过。
 
 ## 4. 知识库与参考文献学习（推荐流程）
 
@@ -92,7 +96,8 @@ Prompts 位置：
 - `style_profile.md`：个人风格指纹
 - `error_log.md`：禁忌清单（负面约束）
 - `custom_specs.md`：主题/受众/检测/阈值等全局配置
-- `outline_template.md`：大纲结构模板
+- `document_spec_template.md`：单点事实约束模板
+- `outline_template.md`：含 DoD 的大纲结构模板
 - `hard_memory.json` / `soft_memory.json`：长期记忆存储
 - `reference_library.json`：参考文献库
 - `reference_learning.md`：参考文献学习流程

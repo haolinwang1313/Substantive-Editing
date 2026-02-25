@@ -16,12 +16,17 @@ This workflow orchestrates the multi-agent writing loop described in the AI Vibe
    - Read `.ai_context/custom_specs.md` and `.ai_context/style_profile.md` to understand the target audience, tone, and formatting rules.
    - Read `.ai_context/error_log.md` to understand what NOT to do.
 
-2. **Outline Management** (Agent Role: Outline Manager):
+2. **Document Spec Generation (Spec Coding)**:
+   - Read `.ai_context/document_spec_template.md`.
+   - Create or update `.ai_context/document_spec.md` with the core arguments, negative constraints, and evidence requirements.
+   - Ask the user to review and approve the document spec. **Do NOT proceed further until the user approves.**
+
+3. **Outline Management** (Agent Role: Outline Manager):
    - Read `.ai_context/prompts/6_outline_manager_agent.md` and `.ai_context/outline_template.md`.
-   - Before writing any full text, generate a structured outline based on the user's topic.
+   - Before writing any full text, generate a structured outline based on the `document_spec.md`. The outline MUST contain `definition_of_done` constraints.
    - Save the approved outline to `.ai_context/memory/hard_memory.json` under a key like `latest_outline`.
 
-3. **Content Drafting** (Agent Role: Content Writer):
+4. **Content Drafting** (Agent Role: Content Writer):
    - Read `.ai_context/prompts/7_content_writer_agent.md`.
    - Read the generated outline from Step 2.
    - Read domain facts from `.ai_context/memory/hard_memory.json` and `.ai_context/memory/soft_memory.json`.

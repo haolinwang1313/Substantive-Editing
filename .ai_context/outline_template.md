@@ -26,7 +26,12 @@
           "word_range": {
             "min": 0,
             "max": 0
-          }
+          },
+          "definition_of_done": [
+            "Must cite reference X",
+            "Must use term Y",
+            "No more than N words"
+          ]
         }
       ]
     }
@@ -54,3 +59,7 @@ structure:
         word_range:
           min: 0
           max: 0
+        definition_of_done:
+          - "Must cite reference X"
+          - "Must use term Y"
+          - "No more than N words"

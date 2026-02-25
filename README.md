@@ -8,6 +8,10 @@
 
 ## 🌟 What's New / 更新日志
 
+**v1.6 - Spec-Driven Writing (Spec Coding) / 规范驱动写作**
+Added `document_spec_template.md` and `Definition of Done (DoD)` enforcing mechanisms to guarantee engineering-grade accuracy and prevent unauthorized AI rewrites.
+新增 `document_spec_template.md` 与 `DoD` (Definition of Done) 校验机制，确保工程级的高精度输出，杜绝 AI 擅自改写。
+
 **v1.5 - PDF Reading & MinerU / PDF 阅读与 MinerU 集成**
 Added `pdf-reader-agent` for deep PDF reading with `MinerU` integration.
 Supported APA/IEEE citation formatting and reading quality scoring.
@@ -40,6 +44,11 @@ Added a dedicated module to detect and correct grammatical errors and typos in b
 **Mimic**: Analyzes your past writings to extract "Style DNA".  
 **Consistency**: Maintains your unique tone, sentence structure, and vocabulary.  
 **原理**: 分析过往文章提取“风格指纹”，保持语调、句式和用词的一致性。
+
+### 📑 SPEC-DRIVEN WRITING (SPEC CODING) / 规范驱动写作
+**Document Spec**: The single source of truth for your writing task (core arguments, constraints).  
+**Definition of Done (DoD)**: Strict checklists attached to outlines that the Writer and Reviewer must satisfy.  
+**原理**: 借鉴 Spec Coding 思想，在起草前确认 Document Spec（客观事实来源），大纲中附加 DoD（验收标准），检阅阶段执行严格的规范审计（Spec Audit）。
 
 ### 🧠 ERROR MEMORY / 错误记忆
 **Learning**: Remembers your corrections and "Don'ts".  
@@ -292,7 +301,8 @@ The system is pre-configured to support **GPTZero**, **Copyleaks**, and other de
   - `style_profile.md`: Your style fingerprint.
   - `error_log.md`: Your negative constraints.
   - `custom_specs.md`: User-defined writing context.
-  - `outline_template.md`: Template for structuring content.
+  - `document_spec_template.md`: Template for single source of truth document spec.
+  - `outline_template.md`: Template for structuring content with Definition of Done (DoD).
   - `reference_learning.md`: Reference learning pipeline.
   - `pdf_ingestion_template.md`: PDF ingestion template.
   - `memory/hard_memory.json`: Domain hard memory (terms, units, key values).
@@ -338,7 +348,9 @@ graph TD
     <br />柔性记忆]
     
     A --> I{生成阶段 / Generation Phase}
-    I --> J[The Writer
+    I --> DS[Document Spec
+    <br />写作规范约束]
+    DS --> J[The Writer
     <br />写作引擎]
     I --> K[Grammar Checker
     <br />语法检查器]
@@ -367,10 +379,10 @@ graph TD
 **分析（提取风格） -> 存储（建立风格库与错题本） -> 生成（RAG 检索增强） -> 迭代（更新错题本）**
 
 **Workflow Explanation / 流程说明**:
-1. **Analysis**: The system analyzes user-provided samples and domain context to extract style traits and memory candidates.
+1. **Analysis & Spec Definition**: The system analyzes user requirements, extracts style traits, and creates a `document_spec.md` as the single source of truth.
 2. **Storage**: Hard memory and soft memory are stored by domain alongside the style profile and error log.
-3. **Generation**: The Writer retrieves relevant hard/soft memory to ensure accuracy and tone alignment, while the Grammar Checker ensures quality.
-4. **Iteration**: User feedback updates both the error log and long-term memory to improve future outputs.
+3. **Generation**: The Writer strictly adheres to the `Definition of Done (DoD)` defined in the outline and retrieves relevant hard/soft memory. The Grammar Checker ensures spelling/grammar quality.
+4. **Iteration**: The Reviewer audits the draft against the `document_spec.md`. Any failure forces a rewrite. User feedback updates both the error log and long-term memory.
 ## 🧩 Agent Role Configuration Tutorial / 智能体角色配置教程
 This tutorial shows how to configure each agent role using existing prompt and spec files.  
 以下教程演示如何通过现有的 prompt 与规范文件配置各智能体角色。
@@ -446,22 +458,22 @@ graph TD
     Start([Start / 开始]) --> Coordinator[Workflow Coordinator
     <br />流程协调器]
     
-    Coordinator -->|1. Create/Load| OutlineMgr[Outline Manager
+    Coordinator -->|1. Spec & Outline| OutlineMgr[Outline Manager
     <br />大纲管理智能体]
     OutlineMgr -->|Save to Memory| HardMem[(Hard Memory
     <br />硬性记忆)]
-    OutlineMgr -->|Valid Outline| Coordinator
+    OutlineMgr -->|Valid Outline w/ DoD| Coordinator
     
     Coordinator -->|2. Draft Section| Writer[Content Writer
     <br />写作智能体]
     HardMem -.->|Read Outline| Writer
-    Writer -->|Draft| Coordinator
+    Writer -->|Draft or Revision Plan| Coordinator
     
-    Coordinator -->|3. Review| Reviewer[Content Review
+    Coordinator -->|3. Spec Audit & Review| Reviewer[Content Review
     <br />检阅智能体]
     Reviewer -->|Check| MCP[GPTZero MCP]
     
-    Reviewer -->|Result| Decision{Pass? / 通过?}
+    Reviewer -->|Result| Decision{Pass Spec & Tone? / 规范与语气通过?}
     
     Decision -->|Yes| Finish([Finish / 完成])
     Decision -->|No: Revise / 修订| Writer
