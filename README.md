@@ -499,6 +499,62 @@ graph TD
 If the chart looks stale, update the cache parameter to force refresh.
 如果图表显示滞后，可更新 cache 参数以强制刷新。
 
+## 🧾 MinerU 安装与配置流程
+- 环境准备（macOS）  
+  - 安装 Python 3.9（建议使用官方安装包或 pyenv）  
+  - 在项目根目录创建并启用虚拟环境：
+  
+  ```bash
+  python3 -m venv mineru_venv
+  source mineru_venv/bin/activate
+  ```
+- 安装依赖（尽量避免版本冲突）  
+  - 安装 PyTorch（根据你的 CUDA/CPU 环境选择官方轮子）：https://pytorch.org  
+  - 安装核心库：
+  
+  ```bash
+  pip install -U pip wheel setuptools
+  pip install magic-pdf gradio ultralytics onnxruntime ftfy
+  pip install transformers==4.57.6
+  ```
+  - Detectron2（macOS 推荐源码安装）：
+  
+  ```bash
+  pip install 'git+https://github.com/facebookresearch/detectron2.git'
+  ```
+- 配置文件与约束文件  
+  - 复制布局模型推理配置到本仓库：  
+    - 已提供 [layoutlmv3_base_inference.yaml](file:///Users/huixin/Documents/ProgramDevelopment/AI_Vibe_Writing_Skill/configs/layoutlmv3_base_inference.yaml)  
+    - 将其放置到你的虚拟环境中 magic-pdf 的资源路径：  
+  
+  ```bash
+  cp configs/layoutlmv3_base_inference.yaml \
+     mineru_venv/lib/python3.9/site-packages/magic_pdf/resources/model_config/layoutlmv3/layoutlmv3_base_inference.yaml
+  ```
+  - 本仓库提供 [magic-pdf.json](file:///Users/huixin/Documents/ProgramDevelopment/AI_Vibe_Writing_Skill/magic-pdf.json) 作为运行配置示例，其中已关闭表格识别以避免缺失 OCR 权重导致崩溃：
+    - table-config.is_table_recog_enable: false
+- 兼容性补丁（仅当出现下述错误时执行）  
+  - 若出现 `Cannot import torch_int` 或 `find_pruneable_heads_and_indices` 相关错误：  
+    - 升级到 `transformers==4.57.6`（上文已安装）  
+    - 将 `modeling_layoutlmv3.py` 中对 `find_pruneable_heads_and_indices` 的导入移除  
+    - 在 `layoutlmv3/backbone.py` 中为 `images` 输入添加 `Tensor` 分支（避免 `Tensor.__contains__` 断言）  
+    - 补丁方式：直接在你虚拟环境的 `site-packages/magic_pdf/` 对应文件进行最小修改
+- 运行方式  
+  - 命令行（文本模式）：
+  
+  ```bash
+  magic-pdf -p ./test.pdf -o ./output -m txt
+  ```
+  - 图形界面（Gradio）：
+  
+  ```bash
+  python mineru_gui.py
+  # 浏览器访问 http://127.0.0.1:7860
+  ```
+- 模型文件与体积约束  
+  - 已将 `.gitignore` 配置为不上传完整模型与本地虚拟环境（空间受限场景友好）  
+  - 如需启用表格识别或 OCR，请自行下载对应权重并在 `magic-pdf.json` 中启用相关开关
+
 ## 📄 License
 
 This project is licensed under the [MIT License](./LICENSE).
